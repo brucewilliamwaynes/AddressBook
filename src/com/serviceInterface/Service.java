@@ -47,6 +47,5 @@ public void fillAddressDetailsFromJSON( JSONObject personJSONObj ,  Person indiv
 public void writeToJSONFromAddressBook(AddressBook addressBook) throws IOException;
 public void writeToJSONFromPerson(JSONObject personJSONObj , Person individual );
 public void writeToJSONFromAddress( JSONObject personJSONObj , Person individual );
-public void workWithDBForAddressBook();
 
 }

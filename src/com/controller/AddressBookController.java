@@ -6,11 +6,13 @@ package com.controller;
 import com.model.AddressBook;
 import com.model.Person;
 import com.serviceImplementation.AddressBookService;
+import com.serviceImplementation.DBService;
 import com.serviceImplementation.PersonService;
 import com.serviceInterface.Service;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+
 
 /**
  * @author bridgelabz
@@ -24,7 +26,7 @@ import java.util.Scanner;
  */
 public class AddressBookController {
 	
-    public static void main(String args[])throws IOException{
+    public static void main(String args[])throws Exception {
 
 		Scanner sc = new Scanner( System.in );
 		
@@ -51,7 +53,7 @@ public class AddressBookController {
 			
 				choice = sc.nextLine();
 			
-			}while(!choice.equalsIgnoreCase("1") && !choice.equalsIgnoreCase("2"));
+			}while(!choice.equalsIgnoreCase("1") && !choice.equalsIgnoreCase("2") && !choice.equalsIgnoreCase("3"));
 		
 			if(choice.equalsIgnoreCase("1")){
 			
@@ -91,9 +93,7 @@ public class AddressBookController {
 
 			if(choice.equalsIgnoreCase("3")){
 
-			    Service newDBService = new DBService();
-
-			    newService.workWithDBForAddressBook();
+			    DBService.workWithDBForAddressBook();
 
             }
 			

@@ -1,22 +1,26 @@
 package com.serviceImplementation;
 
-public class DBService implements Service{
+import java.sql.*;
+import java.util.Scanner;
 
-    private Connection connect = null;
-    private Statement statement = null;
-    private PreparedStatement preparedStatement = null;
-    private ResultSet resultSet = null;
+public class DBService{
 
-@Overrride
-    public void workWithDBForAddressBook(){
+    private static Connection connect = null;
+    private static Statement statement = null;
+    private static PreparedStatement preparedStatement = null;
+    private static ResultSet resultSet = null;
+
+    public static void workWithDBForAddressBook() throws SQLException, ClassNotFoundException {
 
         System.out.println("Working with DB ! We would initialize the default Database!");
 
-        try{
-
             Class.forName("com.mysql.cj.jdbc.Driver");
 
+            System.out.println(" Establishing Connection");
+
             connect = DriverManager.getConnection("jdbc:mysql://localhost/addressbook?" + "user=sqluser&password=sqluserpw");
+
+            System.out.println("Bye!");
 
             statement = connect.createStatement();
 
@@ -24,7 +28,7 @@ public class DBService implements Service{
 
 //            resultSet = statement.executeQuery("select * from addressbook.book1");
 
-            System.out.println("Now that everything is intialized , time to find out what you want to do !");
+            System.out.println("Now that everything is initialized , time to find out what you want to do !");
 
 
             String choice = "";
@@ -33,7 +37,7 @@ public class DBService implements Service{
 
                 System.out.println("Enter 1 to search for person , 2 to add person to addressBook , 3 to delete person , 4 to edit details of a person");
 
-                System.out.println("5 to Totol population of AddressBook , 6 show AddressBook details , 0 to Exit");
+                System.out.println("5 to Total population of AddressBook , 6 show AddressBook details , 0 to Exit");
 
                 choice = sc.nextLine();
 
@@ -45,16 +49,22 @@ public class DBService implements Service{
 
                     String lastName = sc.nextLine();
 
-                    preparedStatement = connect.prepareStatement(
-                      "select * from addressbook.book1 where FirstName = ? and LastName = ? ;"
-                    );
+//                    preparedStatement = connect.prepareStatement(
+//                      "select * from addressbook.book1 where FirstName = ? and LastName = ? ;"
+//                    );
+//
+//                    preparedStatement.setString(1,firstName);
+//
+//                    preparedStatement.setString(2,lastName);
+//
+//                    resultSet = preparedStatement.executeQuery();
 
-                    preparedStatement.setString(1,firstName);
+                    statement = connect.createStatement();
 
-                    preparedStatement.setString(2,lastName);
+                    String query = "select * from addressbook.book1 where FirstName = '" + firstName +"' and LastName = '" + lastName + "';";
 
-                    resultSet = preparedStatement.executeQuery();
-
+                    resultSet = statement.executeQuery(query);
+                    /*
                     if(!resultSet.next()){
 
                         System.out.println("Cannot be found any such person!");
@@ -62,10 +72,14 @@ public class DBService implements Service{
                     }
 
                     else{
+                    */
+//                        System.out.println("Hey Printing now!");
 
                         showResultSet(resultSet);
 
-                    }
+                        System.out.println("Done printing? ");
+
+//                    }
 
 
                 }
@@ -95,20 +109,22 @@ public class DBService implements Service{
                     String pinCode = sc.nextLine();
 
                     preparedStatement = connect.prepareStatement(
-                            "insert into addressbook.book1 values (default , ? , ? , ? , ? , ? , ? ,? , ? , ? );"
+                            "insert into addressbook.book1 values ( ? , ? , ? , ? , ? , ? ,? , ? , ? );"
                     );
 
                     preparedStatement.setString(1,firstName);
                     preparedStatement.setString(2,lastName);
-                    perparedStatement.setString(3,phoneNumber);
+                    preparedStatement.setString(3,phoneNumber);
                     preparedStatement.setString(4,flatNumber);
                     preparedStatement.setString(5,buildingName);
                     preparedStatement.setString(6,landmark);
                     preparedStatement.setString(7,city);
-                    preparedStatement.setString(6,state);
-                    preparedStatement.setString(6,pinCode);
+                    preparedStatement.setString(8,state);
+                    preparedStatement.setString(9,pinCode);
 
-                    preparedStatement.executeQuery();
+                    preparedStatement.addBatch();
+
+                    preparedStatement.executeBatch();
 
                     System.out.println("New Person Added!");
 
@@ -132,14 +148,14 @@ public class DBService implements Service{
 
                     preparedStatement.setString(2,lastName);
 
-                    resultSet = preparedStatement.executeQuery();
-
+                    preparedStatement.executeUpdate();
+/*
                     if(!resultSet.next()){
 
                         System.out.println("No such person found!");
 
                     }
-
+*/
                     System.out.println("Successfully Deleted!");
 
                 }
@@ -152,7 +168,7 @@ public class DBService implements Service{
 
                     String lastName = sc.nextLine();
 
-                    preparedStatement = connect.prepareStatment(
+                    preparedStatement = connect.prepareStatement(
                             "select * from addressbook.book1 where FirstName = ? and LastName = ?;"
                     );
 
@@ -162,6 +178,7 @@ public class DBService implements Service{
 
                     resultSet = preparedStatement.executeQuery();
 
+                    /*
                     if(!resultSet.next()){
 
                         System.out.println("No such person found.");
@@ -169,12 +186,12 @@ public class DBService implements Service{
                     }
 
                     else{
-
+*/
                         String option = "";
 
                         while(resultSet.next()) {
 
-                            System.out.println("Welcome!")
+                            System.out.println("Welcome!");
 
                             System.out.print(resultSet.getString("FirstName") + " " + resultSet.getString("LastName"));
 
@@ -201,7 +218,8 @@ public class DBService implements Service{
                                     preparedStatement.setString(2, firstName);
                                     preparedStatement.setString(3, lastName);
 
-                                    preparedStatement.executeQuery();
+                                    preparedStatement.addBatch();
+                                    preparedStatement.executeBatch();
 
                                 }
 
@@ -224,7 +242,7 @@ public class DBService implements Service{
                                     String pinCode = sc.nextLine();
 
                                     preparedStatement = connect.prepareStatement(
-                                      "update addressbook.book1 set FlatNumber = ? , BuildingName = ? , Landmark = ? , City = ? , State = ? , Pincode = ? where FirstName = ? and LastName = ?;"
+                                      "update addressbook.book1 set FlatNumber = ? , BuildingName = ? , Landmark = ? , City = ? , State = ? , Pindcode = ? where FirstName = ? and LastName = ?;"
                                     );
 
                                     preparedStatement.setString(1,flatNumber);
@@ -236,9 +254,10 @@ public class DBService implements Service{
                                     preparedStatement.setString(7,firstName);
                                     preparedStatement.setString(8,lastName);
 
-                                    preparedStatement.executeQuery();
+                                    preparedStatement.addBatch();
+                                    preparedStatement.executeBatch();
 
-                                    System.out.pritnln("Changes made to DataBase!");
+                                    System.out.println("Changes made to DataBase!");
 
 
                                 }
@@ -251,12 +270,35 @@ public class DBService implements Service{
 
 //                            }while(!stop.equals("yes"));
 
-                        }
+//                        }
                     }
 
                 }
 
             }while(!choice.equals("0"));
+
+
+    }
+
+    public static void showResultSet(ResultSet resultSet)throws SQLException{
+
+        while(resultSet.next()){
+
+//            System.out.println("Begin to display! ");
+
+            System.out.println(" Hey " + resultSet.getString("FirstName"));
+
+            System.out.println(" Registered Full Name " + resultSet.getString("FirstName") + " " + resultSet.getString("LastName"));
+
+            System.out.println("Phone Number :" + resultSet.getString("PhoneNumber"));
+
+            System.out.println("Address Details are : ");
+
+            System.out.println(resultSet.getString("FlatNumber") + " ,\n" + resultSet.getString("BuildingName" ) + " ," );
+
+            System.out.println(resultSet.getString("Landmark") + " , \n" + resultSet.getString("City") + " , \n" + resultSet.getString("State") + " , \n");
+
+            System.out.println(resultSet.getString("Pindcode"));
 
         }
 
