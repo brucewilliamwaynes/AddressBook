@@ -3,15 +3,14 @@
  */
 package com.controller;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Scanner;
-
 import com.model.AddressBook;
 import com.model.Person;
 import com.serviceImplementation.AddressBookService;
 import com.serviceImplementation.PersonService;
 import com.serviceInterface.Service;
+
+import java.util.ArrayList;
+import java.util.Scanner;
 
 /**
  * @author bridgelabz
@@ -25,8 +24,7 @@ import com.serviceInterface.Service;
  */
 public class AddressBookController {
 	
-	
-	public static void runForJSON() throws Exception{
+    public static void main(String args[])throws IOException{
 
 		Scanner sc = new Scanner( System.in );
 		
@@ -49,7 +47,7 @@ public class AddressBookController {
 			String choice = null;
 			do {
 				
-				System.out.println( "Now Now \n" + "Enter 1 to Load Address Book from file system, 2 to Create New Address Book !");
+				System.out.println( "Now Now \n" + "Enter 1 to Load Address Book from file system, 2 to Create New Address Book , 3 to Load Address Book from DB!");
 			
 				choice = sc.nextLine();
 			
@@ -90,6 +88,14 @@ public class AddressBookController {
 				listOfAddressBooks.add(elementBook);
 				
 			}
+
+			if(choice.equalsIgnoreCase("3")){
+
+			    Service newDBService = new DBService();
+
+			    newService.workWithDBForAddressBook();
+
+            }
 			
 			
 		}

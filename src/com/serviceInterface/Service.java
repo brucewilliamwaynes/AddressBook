@@ -4,15 +4,12 @@
 package com.serviceInterface;
 
 
+import com.model.AddressBook;
+import com.model.Person;
+import org.json.simple.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
-
-import org.json.simple.JSONObject;
-
-import com.model.Address;
-import com.model.AddressBook;
-import com.model.Person;
 
 /**
  * @author brucewilliamwaynes
@@ -50,5 +47,6 @@ public void fillAddressDetailsFromJSON( JSONObject personJSONObj ,  Person indiv
 public void writeToJSONFromAddressBook(AddressBook addressBook) throws IOException;
 public void writeToJSONFromPerson(JSONObject personJSONObj , Person individual );
 public void writeToJSONFromAddress( JSONObject personJSONObj , Person individual );
+public void workWithDBForAddressBook();
 
 }
